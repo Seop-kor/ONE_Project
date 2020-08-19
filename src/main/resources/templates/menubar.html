@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <style>
+        .modal-backdrop {
+            all: unset;
+        }
+
+        .modal {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .seminor-login-modal-body .close {
+            position: relative;
+            top: -45px;
+            left: 10px;
+            color: #1cd8ad;
+        }
+
+        .seminor-login-modal-body .close {
+            opacity: 0.75;
+        }
+
+        .seminor-login-modal-body .close:focus, .seminor-login-modal-body .close:hover {
+            color: #39e8b0;
+            opacity: 1;
+            text-decoration: none;
+            outline: 0;
+        }
+
+        .seminor-login-modal .modal-dialog .modal-content {
+            border-radius: 0px;
+        }
+
+        /* form animation */
+        .seminor-login-form .form-group {
+            position: relative;
+            margin-bottom: 1.5em !important;
+        }
+
+        .seminor-login-form .form-control {
+            border: 0px solid #ced4da !important;
+            border-bottom: 1px solid #adadad !important;
+            border-radius: 0 !important;
+        }
+
+        .seminor-login-form .form-control:focus, .seminor-login-form .form-control:active {
+            outline: none !important;
+            outline-width: 0;
+            border-color: #adadad !important;
+            box-shadow: 0 0 0 0.2rem transparent;
+        }
+
+        *:focus {
+            outline: none;
+        }
+
+        .seminor-login-form {
+            padding: 2em 0 0;
+        }
+
+        .form-control-placeholder {
+            position: absolute;
+            top: 0;
+            padding: 7px 0 0 13px;
+            transition: all 200ms;
+            opacity: 0.5;
+            border-top: 0px;
+            border-left: 0;
+            border-right: 0;
+        }
+
+        .form-control:focus + .form-control-placeholder, .form-control:valid + .form-control-placeholder {
+            font-size: 75%;
+            -webkit-transform: translate3d(0, -100%, 0);
+            transform: translate3d(0, -100%, 0);
+            opacity: 1;
+        }
+
+        .container-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .checkmark-box {
+            position: absolute;
+            top: -5px;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #adadad;
+        }
+
+        .container-checkbox {
+            display: block;
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            line-height: 1.1;
+        }
+
+        .container-checkbox input:checked ~ .checkmark-box:after {
+            color: #fff;
+        }
+
+        .container-checkbox input:checked ~ .checkmark-box:after {
+            display: block;
+        }
+
+        .container-checkbox .checkmark-box:after {
+            left: 10px;
+            top: 4px;
+            width: 7px;
+            height: 15px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+        .checkmark:after, .checkmark-box:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .container-checkbox input:checked ~ .checkmark-box {
+            background-color: #9d7af6;
+            border: 0px solid transparent;
+        }
+
+        .btn-check-log .btn-check-login {
+            font-size: 16px;
+            padding: 10px 0;
+        }
+
+        button.btn-check-login:hover {
+            color: #fff;
+            background-color: #9d7af6;
+            border: 2px solid #9d7af6;
+        }
+
+        .btn-check-login {
+            color: #9d7af6;
+            background-color: transparent;
+            border: 2px solid #9d7af6;
+            transition: all ease-in-out .3s;
+        }
+
+        .btn-check-login {
+            display: inline-block;
+            padding: 12px 0;
+            margin-bottom: 0;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border-radius: 0;
+            width: 100%;
+        }
+
+        .forgot-pass-fau a {
+            text-decoration: none !important;
+            font-size: 14px;
+        }
+
+        .text-primary-fau {
+            color: #1959a2;
+        }
+
+        .select-form-control-placeholder {
+            font-size: 100%;
+            padding: 7px 0 0 13px;
+            margin: 0;
+        }
+
+    </style>
+    <script>
+        $(document).ready(
+            function () {
+                $("#btnLogin")
+                    .click(
+                        function () {
+                            $("#login_confirm").empty();
+
+                            let query = $("form[name=frm]")
+                                .serialize();
+                            $
+                                .ajax({
+                                    type: "post",
+                                    url: "/loginff",
+                                    data: query,
+                                    dataType: "json",
+                                    success: function (f) {
+                                        if (f === true) {
+                                            location.href = "/";
+                                        } else {
+                                            $(
+                                                "#login_confirm")
+                                                .text(
+                                                    "아이디 또는 비밀번호가 일치하지 않습니다.")
+                                                .css(
+                                                    "color",
+                                                    "red");
+                                        }
+                                    },
+                                    error: function () {
+                                        alert("에러");
+                                    }
+                                });
+
+                        });
+                $(".btnil").click(
+                    function () {
+
+                        $("#1").empty();
+
+                        $.ajax({
+                            type: "get",
+                            url: "/schedule",
+                            dataType: "json",
+                            success: function (SchduleData) {
+                                let str = "<table class='table table-striped' style='text-align:center'>";
+                                str += "<tr style='font-weight:bold;'><td>날짜</td><td>제목</td></tr>";
+
+                                let list = SchduleData.datas;
+                                $(list).each(
+                                    function (
+                                        index,
+                                        obj) {
+                                        const date = new Date(obj['date']);
+                                        const year = date.getFullYear();
+                                        let month = (1 + date.getMonth());
+                                        month = month >= 10 ? month : '0' + month;
+
+                                        let day = date.getDate();
+                                        day = day >= 10 ? day : '0' + day;
+
+                                        str += "<tr><td>"
+                                            + year + '-' + month + '-' + day
+                                            + "</td><td>"
+                                            + obj["title"]
+                                            + "</td></tr>"
+
+                                    });
+                                str += "</table>";
+                                $("#1").append(str);
+                            },
+                            error: function () {
+                                $("#1").text(
+                                    "error");
+                            }
+                        });
+                        $("#exampleModal").modal('show');
+                    });
+
+                //ID 중복체크 AJAX
+
+                $("#id").keyup(
+                    function () {
+
+                        let input = $("#id").val();
+
+                        // alert("입력했습니다. " + input);
+                        $.ajax({
+                            type: "post",
+                            url: "idCheck?id=" + input,
+                            dataType: "json",
+                            success: function (data) {
+                                // alert("넘어 오는지 확인 " + data.idCheckResult);
+                                if (data.idCheckResult === "false") {
+                                    //alert("아이디가 존재하니다. 다른 아이디를 사용해주세요");
+                                    $("#id_confirm").text(
+                                        "사용중인 아이디입니다").css(
+                                        "color", "red");
+
+                                } else {
+                                    //alert("사용 가능한 아이디 입니다.");
+                                    $("#id_confirm").text(
+                                        "사용 가능한 아이디입니다.").css(
+                                        "color", "blue");
+
+                                }
+
+                            }
+
+                        });
+
+                    });
+
+                //비밀번호 일치 불일치 여부 jQuery
+
+                $(function () {
+                    $("#alert-success").hide();
+                    $("#alert-danger").hide();
+                    $("input").keyup(function () {
+                        let pwd1 = $("#passwd1").val();
+                        let pwd2 = $("#passwd2").val();
+
+                        if (pwd1 !== "" || pwd2 !== "") {
+                            if (pwd1 === pwd2) {
+                                $("#alert-success").show();
+                                $("#alert-danger").hide();
+                            } else {
+                                $("#alert-success").hide();
+                                $("#alert-danger").show();
+                            }
+                        } else if (pwd1 === "" && pwd2 === "") {
+                            $("#alert-success").hide();
+                            $("#alert-danger").hide();
+                        }
+
+                    });
+                });
+
+                //아이디 찾기를 위한 회원가입창 이메일 중복 체크
+
+                $("#signupBtn").on('click', function () {
+                    const pwd1 = $("#passwd1").val();
+                    const pwd2 = $("#passwd2").val();
+
+                    if(pwd1 !== pwd2){
+                        alert('비밀번호 확인이 일치하지 않습니다.');
+                        return false;
+                    }else{
+                        return true;
+                    }
+                });
+
+                $("#email")
+                    .keyup(
+                        function () {
+                            let input = $("#email").val();
+                            if (input === "") {
+
+                                $(".submit").prop("disabled",
+                                    false);
+                                return;
+                            } else {
+                                //alert("입력했습니다. " + input + " " + input1);
+                                $
+                                    .ajax({
+                                        type: "post",
+                                        url: "emailCheck?email="
+                                            + input,
+                                        dataType: "json",
+                                        success: function (
+                                            data) {
+                                            //alert("넘어 오는지 확인 " + data.emailCheckResult);
+                                            if (data.emailCheckResult === "false") {
+                                                //alert("이메일이 존재하니다. 다른 이메일을 사용해주세요");
+                                                $(
+                                                    "#email_confirm")
+                                                    .text(
+                                                        "사용중인 이메일입니다")
+                                                    .css(
+                                                        "color",
+                                                        "red");
+                                            } else {
+                                                //alert("사용 가능한 아이디 입니다.");
+                                                $(
+                                                    "#email_confirm")
+                                                    .text(
+                                                        "사용 가능한 이메일입니다.")
+                                                    .css(
+                                                        "color",
+                                                        "blue");
+
+                                            }
+
+                                        }
+
+                                    });
+                            }
+
+                        });
+
+                $('.close').on('hidden.bs.modal', function (e) {
+                    $(this).find('frm')[0].reset()
+                });
+
+            });
+
+        function close2() {
+            $('#sem-reg').removeClass('show');
+            $("#frm2")[0].reset();
+            $("#id_confirm").empty();
+            $("#email_confirm").empty();
+            $("#alert-success").hide();
+            $("#alert-danger").hide();
+            $("#sem-reg").modal("hide");
+        }
+    </script>
+    <script th:inline="javascript">
+        function loginCheck1() {
+            /* <![CDATA[ */
+            const rid = /*[[${session.id}]]*/;
+            /* ]]> */
+            if(rid === null){
+                alert('로그인을 해주세요');
+            }else{
+                location.href = "/data";
+            }
+
+        }
+
+        function loginCheck2() {
+            /* <![CDATA[ */
+            const rid = /*[[${session.id}]]*/;
+            /* ]]> */
+            if(rid === null){
+                alert('로그인을 해주세요');
+            }else{
+                location.href = "/homework";
+            }
+
+        }
+    </script>
+    <script>
+        function close1() {
+            //alert('aa');
+            $('#sem-login').removeClass("show");
+            $("#frm")[0].reset();
+            $("#login_confirm").empty();
+            $("#sem-login").modal("hide");
+
+        }
+    </script>
+</head>
+<div class="modal fade seminor-login-modal" data-backdrop="static"
+     id="sem-login">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal body -->
+            <div class="modal-body seminor-login-modal-body">
+                <h5 class="modal-title text-center">LOGIN TO MY ACCOUNT</h5>
+                <button type="button" class="close" onclick="javascript:close1();">
+					<span><i class="fa fa-times-circle" aria-hidden="true"
+                             style="padding-top: 25px; padding-right: 6px;"></i></span>
+                </button>
+
+
+                <form class="seminor-login-form" method="post" name="frm" id="frm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" required
+                               autocomplete="off" name="id" id="login_id"> <label
+                            class="form-control-placeholder" for="id">ID</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" required
+                               autocomplete="off" name="passwd1" id="login_passwd1"> <label
+                            class="form-control-placeholder" for="passwd1">Password</label>
+                    </div>
+                    <div id="login_confirm"></div>
+
+                    <div class="btn-check-log">
+                        <button type="button" class="btn-check-login" id="btnLogin">LOGIN</button>
+                    </div>
+
+
+                    <div class="forgot-pass-fau text-center pt-3">
+                        <a href="/forgot" class="text-secondary">Forgot Your
+                            Password?</a>
+
+                    </div>
+                    <div class="create-new-fau text-center pt-3">
+                        <a href="#" class="text-primary-fau"><span data-toggle="modal"
+                                                                   data-target="#sem-reg" data-dismiss="modal">Create A New
+								Account</span></a>
+                    </div>
+
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal fade seminor-login-modal "
+     data-backdrop="static" id="sem-reg">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal body -->
+            <div class="modal-body seminor-login-modal-body">
+                <h5 class="modal-title text-center">CREATE AN ACCOUNT</h5>
+                <button type="button" class="close" onclick="javascript:close2();">
+					<span><i class="fa fa-times-circle" aria-hidden="true"
+                             style="padding-top: 25px; padding-right: 6px;"></i></span>
+                </button>
+
+
+                <form class="seminor-login-form" action="/join" method="post"
+                      id="frm2">
+                    <div class="form-group">
+                        <input type="text" class="form-control" required
+                               autocomplete="off" name="name" id="name"> <label
+                            class="form-control-placeholder" for="name">이름</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" required
+                               autocomplete="off" name="email" id="email"> <label
+                            class="form-control-placeholder" for="email">이메일 주소</label>
+                        <div id="email_confirm"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" class="form-control" required autocomplete="off"
+                               name="phone" id="phone"> <label class="form-control-placeholder"
+                                                               for="phone">전화번호</label>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" required
+                               autocomplete="off" name="student_id" id="student_id"> <label
+                            class="form-control-placeholder" for="student_id">학번</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" required
+                               autocomplete="off" name="age" id="age"> <label
+                            class="form-control-placeholder" for="age">나이</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" required
+                               autocomplete="off" name="id" id="id"> <label
+                            class="form-control-placeholder" for="id">ID</label>
+                        <div id="id_confirm"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" class="form-control" required
+                               autocomplete="off" name="passwd1" id="passwd1">
+                        <label class="form-control-placeholder" for="passwd1">Password</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" required
+                               autocomplete="off" name="passwd2" id="passwd2">
+                        <label class="form-control-placeholder" for="passwd2">Confirm
+                            Password</label>
+                    </div>
+                    <span id="alert-success"
+                          style="display: none; font-size: 14px; color: blue;"><b>비밀번호가
+							일치합니다.</b></span> <span id="alert-danger"
+                                                    style="display: none; color: #d92742; font-weight: bold; font-size: 14px;"><b>비밀번호가
+							일치하지 않습니다.</b></span>
+                    <div class="btn-check-log">
+                        <button type="submit" class="btn-check-login" id="signupBtn">SIGN UP</button>
+                    </div>
+                    <div class="create-new-fau text-center pt-3">
+                        <a href="#" class="text-primary-fau"><span data-toggle="modal"
+                                                                   data-target="#sem-login" data-dismiss="modal">Already Have
+								An Account</span></a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="exampleModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"
+                    style="font-size: 25px; align: center; padding-top: 5px;">동아리 일정</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" id="1"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<body>
+<div class="container">
+    <nav role="navigation">
+        <ul class="pull-left left-menu">
+            <li><a href="#" class="btnil" style="color:#fff">동아리 일정</a></li>
+            <li><a href="#" class="aa" style="color:#fff" onclick="loginCheck1();">세미나 자료</a></li>
+            <li><a href="#" style="color:#fff" onclick="loginCheck2();">과제</a></li>
+        </ul>
+        <h1 id="fh5co-logo">
+            <a href="/"><img src="/images/logo.png" width="130px"
+                             style="padding-bottom:50px;height:100px;padding-left:30px;"/></a>
+        </h1>
+        <ul class="pull-right right-menu" th:if="${session.id} == null">
+            <li><a href='#' data-toggle='modal'  data-target='#sem-login' style='color:#fff'>로그인</a></li>
+            <li class='fh5co-cta-btn'><a href='#' data-toggle='modal' data-target='#sem-reg' style='color:#fff'>회원가입</a></li>
+        </ul>
+        <ul class="pull-right right-menu" th:unless="${session.id} == null">
+            <li>
+                <a href='/logoutf' style='color:#fff'>로그아웃</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

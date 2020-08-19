@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko" class="no-js lt-ie9 lt-ie8 lt-ie7" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>전공동아리 O.N.E.에 오신걸 환영합니다!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FOR IE9 below -->
+    <!--[if lt IE 9]>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,600,400italic,700' rel='stylesheet'
+          type='text/css'>
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="/css/animate.css">
+    <!-- Flexslider -->
+    <link rel="stylesheet" href="/css/flexslider.css">
+    <!-- Icomoon Icon Fonts-->
+    <link rel="stylesheet" href="/css/icomoon.css">
+    <!-- Magnific Popup -->
+    <link rel="stylesheet" href="/css/magnific-popup.css">
+    <!-- Bootstrap  -->
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/purple.css">
+
+    <script src="/js/modernizr-2.6.2.min.js"></script>
+    <style>
+        body {
+            padding-right:0px;
+        }
+    </style>
+</head>
+<body>
+<div class="fh5co-loader"></div>
+<div id="fh5co-page">
+    <section id="fh5co-header" th:include="menubar.html">
+    </section>
+
+    <div class="container">
+        <div class="row">
+            <div class="modal fade" id="contact" tabindex="-1" role="dialog" aria-labelledby="contactLabel" aria-hidden="true" data-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color:#9d7af6">
+                            <h2 class="panel-title" id="contactLabel" style="color:#fff; font-size:16px;padding-top:5px;"><span class="glyphicon glyphicon-info-sign"></span> 입부신청서</h2>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color:#fff;padding-top:5px;">×</button>
+                        </div>
+                        <form action="/regi_group" method="post">
+                            <div class="modal-body" style="padding-left: 10px; padding-right:15px;">
+                                <div class="row">
+                                    <div style="padding-bottom: 10px; padding-left:20px">
+                                        <label for="group_name">이름</label>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12" style="padding-bottom: 10px;">
+                                        <input type="text" name="name" placeholder="홍길동" id="group_name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div style="padding-bottom: 10px; padding-left:20px">
+                                        <label for="group_student_id">학번</label>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12" style="padding-bottom: 10px;">
+                                        <input class="form-control" name="student_id" placeholder="20180000" type="text" id="group_student_id" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div style="padding-bottom: 10px; padding-left:20px"><label for="group_phone">전화번호</label></div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12" style="padding-bottom: 10px;">
+                                        <input class="form-control" name="phone" placeholder="01011111111" id="group_phone" type="text" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div style="padding-bottom: 10px; padding-left:20px"><label for="motive">지원하게 된 동기</label></div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <textarea style="resize:vertical;" class="form-control" rows="6" name="motive" id="motive" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div style="padding-bottom: 10px; padding-left:20px;font-size:16px;padding-top:10px;"><label for="wanted">o.n.e.에 바라는 점</label></div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <textarea style="resize:vertical;" class="form-control" placeholder="이 동아리에서는 이런 것도 해주면 좋겠다 싶으신것 있으시면 적어주세요!" rows="6" name="wanted" id="wanted" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="modal-footer" style="margin-bottom:-7px;">
+                            <input type="button" class="btn btn-primary" value="제출하기" id="group_save" style="margin-right:265px"/>
+                            <!--<span class="glyphicon glyphicon-ok"></span>-->
+                            <!--<span class="glyphicon glyphicon-remove"></span>-->
+                            <button style="float: right;" type="button" class="btn btn-default btn-close" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="fh5co-hero"  class="js-fullheight"  style="background-image: url('/images/color2.png'); height:500px;"
+             data-next="yes">
+
+        <div class="container">
+            <div class="fh5co-intro js-fullheight">
+                <div class="fh5co-intro-text" >
+                    <div class="fh5co-left-position">
+                        <h2 class="animate-box"></h2>
+                        <p class="animate-box"><a href="#" class="btn btn-primary" data-toggle="modal" style="margin-left:600px;" onclick="loginCheck();">입부하러 가기</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fh5co-learn-more animate-box">
+            <a href="#" class="scroll-btn">
+                <span class="text">더 많은 정보를 보시겠습니까?</span>
+                <span class="arrow" ><i class="icon-chevron-down"></i></span>
+            </a>
+        </div>
+    </section>
+    <section id="fh5co-projects">
+        <div class="container">
+            <div class="row row-bottom-padded-md">
+                <div class="col-md-6 col-md-offset-3 text-center">
+                    <h2 class="fh5co-lead animate-box">O.N.E.이란?</h2>
+                    <p class="fh5co-sub-lead animate-box">
+                        O.N.E.은 Original Network Expert의 줄임말로 뜻 그대로 네트워크의 전문가가 되기 위해 끊임 없이 노력하는 동아리입니다.<br>
+                        웹프로그래밍 기술과 모바일 앱 프로그래밍 기술, Windows Server, Linux등 네트워크 서버관리 기술등을 학습해 전문적인 사이버공간을 구축할 수 있는 능력 배양을 목표로 합니다. <br>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="fh5co-features">
+        <div class="container">
+            <div class="row text-center row-bottom-padded-md">
+                <div class="col-md-8 col-md-offset-2">
+
+                    <h2 class="fh5co-lead animate-box">O.N.E. 에서는 무엇을 하는가?</h2>
+                    <p class="fh5co-sub-lead animate-box">동양미래대학교의 전공동아리입니다. Project Development Lab의 일종이며, 저희 O.N.E는 인터넷 및 모바일 기술을 활용한 ICT 작품개발을 최종적으로 만들어냅니다.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-12 animate-box">
+                    <div class="fh5co-feature">
+                        <div class="fh5co-icon">
+                            <i class="icon-power"></i>
+                        </div>
+                        <h3>리더십 향상</h3>
+                        <p>여러 많은 부장들이 있습니다. 서로 맡은 직무에 책임감을 더해주고 리더십을 키워줍니다. </p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-12 animate-box">
+                    <div class="fh5co-feature">
+                        <div class="fh5co-icon">
+                            <i class="icon-flag2"></i>
+                        </div>
+                        <h3>자바를 보다 쉽게!</h3>
+                        <p>학술부장이 직접 가르쳐주는 자바! 교수님께 수업 듣던 중 이해가 안가는 부분들을 세미나 시간에 다시 자세하게 설명해드립니다. 같은 학생으로 눈높이에 맞게 알려주는 세미나를 진행합니다.</p>
+                    </div>
+                </div>
+                <div class="clearfix visible-sm-block"></div>
+                <div class="col-md-4 col-sm-6 col-xs-12 animate-box">
+                    <div class="fh5co-feature">
+                        <div class="fh5co-icon">
+                            <i class="icon-anchor"></i>
+                        </div>
+                        <h3>놓친 강의 다시보기 가능한 사이트</h3>
+                        <p>어디에도 없는 세미나 다시보기 기능. 오직 저희 원에만 존재합니다. 일이 있어서 빠지거나, 그때 들었던 세미나가 기억이 안난다 하실 때 챙겨보실 수 있습니다. 열린 강의 사이트에 어서오세요!</p>
+                    </div>
+                </div>
+
+
+
+
+                <div class="clearfix visible-sm-block"></div>
+            </div>
+        </div>
+    </section>
+    <section id="fh5co-features-2">
+        <div class="container">
+            <div class="col-md-6 col-md-push-6">
+                <figure class="fh5co-feature-image animate-box">
+                    <img src="/images/com.png" >
+                </figure>
+            </div>
+            <div class="col-md-6 col-md-pull-6">
+                <h2 class="fh5co-lead animate-box">O.N.E. 장점</h2>
+                <div class="fh5co-feature">
+                    <div class="fh5co-icon animate-box"><i class="icon-check2"></i></div>
+                    <div class="fh5co-text animate-box">
+                        <h3>동아리실 사용가능</h3>
+                        <p>동아리실이 있으면 다같이 작업을 해야하는데 장소가 없다 하실 때마다 동아리실을 가서 작업을 하실 수 있습니다. 널고 쾌적한 원 동아리실 . 다들 경험해보세요! </p>
+                    </div>
+                </div>
+                <div class="fh5co-feature">
+                    <div class="fh5co-icon animate-box"><i class="icon-check2"></i></div>
+                    <div class="fh5co-text animate-box">
+                        <h3>세미나를 통한 실력향상</h3>
+                        <p>학술 부장이 세미나를 진행하게 됩니다. 학술부장은 세미나 준비로 실력 up!듣는 친구들은 맞춤형 교육으로 실력 up! 이게 바로 일석이조!</p>
+                    </div>
+                </div>
+                <div class="fh5co-feature">
+                    <div class="fh5co-icon animate-box"><i class="icon-check2"></i></div>
+                    <div class="fh5co-text animate-box">
+                        <h3>과제를 통한 기초학습 다지기</h3>
+                        <p>필요할 때 과제 제출을 요구합니다. 어려웠던 내용을 비슷한 예제 문제로 풀어봄으로써 이해도 더욱 잘 되고 기초까지 탄탄하게 다지실 수 있습니다</p>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </section>
+    <!-- END #fh5co-features-2 -->
+
+    <section id="fh5co-testimonials">
+        <div class="container">
+            <div class="row row-bottom-padded-sm">
+                <div class="col-md-6 col-md-offset-3 text-center">
+                    <h2 class="fh5co-lead animate-box">O.N.E에 대한 한마디</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-center animate-box">
+                    <div class="flexslider">
+                        <ul class="slides">
+                            <li>
+                                <blockquote>
+                                    <p>&ldquo;원은 널 원해. 당장 위로 올라가서 입부 신청서 써. &rdquo;</p>
+                                    <p><cite>&mdash; 유인섭</cite></p>
+                                </blockquote>
+                            </li>
+                            <li>
+                                <blockquote>
+                                    <p>&ldquo;원이 여러분의 성적을 책임져줍니다. 저도 덕분에 성적이 쑥쑥 올랐어요!&rdquo;</p>
+                                    <p><cite>&mdash; 배윤진</cite></p>
+                                </blockquote>
+                            </li>
+                            <li>
+                                <blockquote>
+                                    <p>&ldquo;원 탈퇴했다가 도저히 원 없으면 안될 것 같아서 다시 돌아온 사람. 바로 접니다. 저처럼 뒤늦게 후회하지 말고 바로 들어오세요!&rdquo;</p>
+                                    <p><cite>&mdash; 김유진</cite></p>
+                                </blockquote>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="flexslider-controls">
+                        <ol class="flex-control-nav">
+                            <li class="animate-box">유인섭 학생(졸업생)</li>
+                            <li class="animate-box">배윤진 학생(졸업생)</li>
+                            <li class="animate-box">김유진 학생(졸업생)</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END #fh5co-testimonials -->
+
+    <footer id="fh5co-footer">
+        <div class="fh5co-copyright animate-box">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        O.N.E <i class="fa fa-love"></i><a>Circles</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<script src="/js/jquery.min.js"></script>
+<!-- jQuery Easing -->
+<script src="/js/jquery.easing.1.3.js"></script>
+<!-- Bootstrap -->
+<script src="/js/bootstrap.min.js"></script>
+<!-- Waypoints -->
+<script src="/js/jquery.waypoints.min.js"></script>
+<!-- Flexslider -->
+<script src="/js/jquery.flexslider-min.js"></script>
+<!-- Magnific Popup -->
+<script src="/js/jquery.magnific-popup.min.js"></script>
+<script src="/js/magnific-popup-options.js"></script>
+<script src="/js/main.js"></script>
+
+<script th:inline="javascript">
+    function loginCheck() {
+        /* <![CDATA[ */
+        const rid = /*[[${session.id}]]*/;
+        /* ]]> */
+        if(rid === null){
+            alert('로그인을 해주세요');
+        }else{
+            $.ajax({
+                type: 'get',
+                url: '/memberinfo',
+                data:{
+                    id : rid
+                }
+            }).done(function (data) {
+                $('#group_name').val(data.name);
+                $('#group_student_id').val(data.student_id);
+                $('#group_phone').val(data.phone);
+                $('#contact').modal('show');
+            });
+        }
+
+    }
+</script>
+
+<script th:inline="javascript">
+    $('#group_save').on('click',function () {
+        $.ajax({
+            type: 'post',
+            url: '/regi_group',
+            data: {
+                /* <![CDATA[ */
+                id : /*[[${session.id}]]*/,
+                /* ]]> */
+                name : $('#group_name').val(),
+                student_id : $('#group_student_id').val(),
+                phone : $('#group_phone').val(),
+                motive : $('#motive').val(),
+                wanted : $('#wanted').val()
+            }
+        }).done(function (data) {
+            if(data === true){
+                $('#contact').modal('hide');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

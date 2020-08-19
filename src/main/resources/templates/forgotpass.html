@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,600,400italic,700' rel='stylesheet'
+          type='text/css'>
+
+    <!-- Bootstrap  -->
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/purple.css">
+    <title>비밀번호 찾기</title>
+    <style>
+        body {
+            padding-right:0px;
+            background-image: url('/images/back.png');
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav role="navigation">
+        <a href="/"><img src="/images/logo.png" width="150px" style="display: block; margin: 30px auto;"/></a>
+    </nav>
+    <h3 style="text-align:center;margin:0px">비밀번호 찾기</h3><hr style="width:30%;border:solid 1px purple;opacity:50%"><br><br>
+    <form action="/forgotpass" method="post">
+        <div class="form-group">
+            <label for="searchpasswd">비밀번호를 찾고자 하는 아이디를 입력해주세요</label>
+            <input type="text" class="form-control form-control-lg" id="searchpasswd" placeholder="아이디를 입력해주세요" name="id">
+        </div>
+        <div class="text-center">
+            <button type="button" class="btn btn-primary" onclick="a();">비밀번호 찾기</button>
+        </div>
+    </form>
+
+    <br><br>
+    아이디가 기억나지 않으시나요? &nbsp;<a href="#">아이디 찾기</a>
+</div>
+<script>
+    function a(){
+        $.ajax({
+            type: 'post',
+            url: '/forgotpass',
+            data: {
+                id: document.getElementById('searchpasswd').value
+            }
+        }).done(function (data) {
+            if(data === true){
+                alert('메일로 비밀번호를 보냈습니다.');
+                const stat = confirm('페이지를 벗어나시겠습니까?');
+                if(stat === true){
+                    window.location.href = '/';
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

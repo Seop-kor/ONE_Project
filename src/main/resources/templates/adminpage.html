@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>O.N.E. 관리자</title>
+    <link rel="stylesheet" href="/css/admin_other/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/simple-sidebar.css">
+</head>
+<body>
+<div class="d-flex" id="wrapper">
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                    <li class="nav-item active" id="home">
+                        <a class="nav-link" href="javascript:;" onclick="home(this)">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item" id="schedule">
+                        <a class="nav-link" href="javascript:;" onclick="schedule(this)">동아리 일정 등록</a>
+                    </li>
+                    <li class="nav-item" id="regi_group">
+                        <a class="nav-link" href="javascript:;" onclick="regi_group(this)">입부 지원서 확인</a>
+                    </li>
+                    <li class="nav-item" id="data_upload">
+                        <a class="nav-link" href="javascript:;" onclick="data_upload(this)">세미나 자료 업로드</a>
+                    </li>
+                    <li class="nav-item" id="homework">
+                        <a class="nav-link" href="javascript:;" onclick="homework(this)">과제 업로드</a>
+                    </li>
+                    <li class="nav-item" id="give_admin">
+                        <a class="nav-link" href="javascript:;" onclick="give_admin(this)">관리자 부여</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container-fluid" id="root">
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+</div>
+<!-- javaScript 부분 -->
+<script src="/js/admin_other/jquery/jquery.min.js"></script>
+<script src="/js/admin_other/js/bootstrap.bundle.min.js"></script>
+<script>
+    //const base = document.getElementById('root');
+    const base = $('#root');
+    document.addEventListener("DOMContentLoaded",function () {
+        $('#root').append('<div>' +
+            'O.N.E. 어드민 페이지 입니다! <br>메뉴들을 클릭해 관리하세요.' +
+            '</div>');
+    });
+    function home() {
+        document.getElementById('schedule').setAttribute('class', 'nav-item');
+        document.getElementById('regi_group').setAttribute('class', 'nav-item');
+        document.getElementById('data_upload').setAttribute('class', 'nav-item');
+        document.getElementById('homework').setAttribute('class', 'nav-item');
+        document.getElementById('home').setAttribute('class', 'nav-item active');
+        document.getElementById('give_admin').setAttribute('class','nav-item');
+        base.empty();
+        base.append('<div>' +
+            'O.N.E. 어드민 페이지 입니다! <br>메뉴들을 클릭해 관리하세요.' +
+            '</div>');
+    }
+    function schedule() {
+        document.getElementById('schedule').setAttribute('class', 'nav-item active');
+        document.getElementById('regi_group').setAttribute('class', 'nav-item');
+        document.getElementById('data_upload').setAttribute('class', 'nav-item');
+        document.getElementById('homework').setAttribute('class', 'nav-item');
+        document.getElementById('home').setAttribute('class', 'nav-item');
+        document.getElementById('give_admin').setAttribute('class','nav-item');
+        base.empty();
+        const tag =
+            "<div class='container'>" +
+            "<h2>동아리 일정 등록</h2>" +
+            "<form id='scheduleForm'>" +
+            "<div class='mb-2'><label for='date'>일정 날짜</label>" +
+            "<input type='date' class='form-control' name='date' id='date'>" +
+            "</div>" +
+            "<div class='mb-2'><label for='schedule_title'></label>" +
+            "<input type='text' id='schedule_title' name='title' class='form-control' placeholder='일정 내용을 등록해주세요.'>" +
+            "</div>" +
+            "<div><button type='button' class='btn btn-primary' id='schedule_btn'>등록</button></div>"+
+            "</form>" +
+            "</div>" +
+            "<script src='/js/schedule_save.js' />";
+        base.append(tag);
+    }
+    function regi_group() {
+        document.getElementById('schedule').setAttribute('class', 'nav-item');
+        document.getElementById('regi_group').setAttribute('class', 'nav-item active');
+        document.getElementById('data_upload').setAttribute('class', 'nav-item');
+        document.getElementById('homework').setAttribute('class', 'nav-item');
+        document.getElementById('home').setAttribute('class', 'nav-item');
+        document.getElementById('give_admin').setAttribute('class','nav-item');
+        base.empty();
+        $.ajax({
+            type: 'get',
+            url: '/group_get'
+        }).done(function (returnData) {
+            let str = "";
+            $(returnData).each(function (index, item) {
+                str += "<div class='container' id='" + item['pk'] + "'>" +
+                    "<div class='row justify-content-center'>" +
+                    "<div>" +
+                    "<div>" +
+                    "<div class='body' style='padding-left: 10px; padding-right:15px;'>"+
+                    "<div class='row'><div style='padding-bottom: 10px; padding-left:20px'>이름 </div>"+
+                    "<div class='col-lg-12 col-md-12 col-sm-12' style='padding-bottom: 10px;'>" +
+                    "<input class='form-control' name='name' type='text' readonly value=" + item['name'] + "></div>"+
+                    "</div>"+
+                    "<div class='row'>"+
+                    "<div style='padding-bottom:10px; padding-left:20px;'>학번 </div>"+
+                    "<div class='col-lg-12 col-md-12 col-sm-12' style='padding-bottom: 10px;'><input class='form-control' name='number' type='text' readonly value='"+item['student_id']+"'/></div>"+
+                    "</div>"+
+                    "<div class='row'><div style='padding-bottom: 10px; padding-left:20px'>전화번호</div>"+
+                    "<div class='col-lg-12 col-md-12 col-sm-12' style='padding-bottom: 10px;'><input class='form-control' name='phone' type='text' readonly value='" + item['phone'] +"'/></div>"+
+                    "</div>"+
+                    "<div class='row'><div style='padding-bottom: 10px; padding-left:20px'>지원하게 된 동기</div>"+
+                    "<div class='col-lg-12 col-md-12 col-sm-12'><textarea style='resize:vertical;' class='form-control' rows='6' name='reason' readonly>" +item['motive']+ "</textarea></div>"+
+                    "</div>"+
+                    "<div class='row'><div style='padding-bottom: 10px; padding-left:20px;font-size:16px;padding-top:10px;'>o.n.e.에 바라는 점</div>"+
+                    "<div class='col-lg-12 col-md-12 col-sm-12'><textarea style='resize:vertical;' class='form-control' rows='6' name='comment' readonly>"+ item['wanted'] +"</textarea></div>"+
+                    "</div>"+
+                    "</div>" +
+                    "<div style='margin-bottom:10px;margin-left:100px;'><button type='button' class='btn btn-primary' id='ok_group_" + item['pk'] + "' onclick='ok(this)'>합격</button>" +
+                    "<button type='button' class='btn btn-danger' id='sorry_group_" + item['pk'] + "' onclick='sorry(this)'>불합격</button></div>"+
+                    "</div>" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>";
+            });
+            base.append(str);
+            base.append("<script src='/js/groupjoin.js' />");
+        });
+    }
+    function data_upload() {
+        document.getElementById('schedule').setAttribute('class', 'nav-item');
+        document.getElementById('regi_group').setAttribute('class', 'nav-item');
+        document.getElementById('data_upload').setAttribute('class', 'nav-item active');
+        document.getElementById('homework').setAttribute('class', 'nav-item');
+        document.getElementById('home').setAttribute('class', 'nav-item');
+        document.getElementById('give_admin').setAttribute('class','nav-item');
+        base.empty();
+        const tag =
+            "<div class='container'>" +
+            "<h2>자료 업로드</h2>" +
+            "<form action='/upload' method='post' id='uploadForm'>" +
+            "<div class='mb-2'><label for='title'>제목</label><input type='text' class='form-control' name='data_title' id='title' placeholder='제목을 입력해 주세요'></div>" +
+            "<div class='mb-2'><label for='content'>내용</label>" +
+            "<textarea name='data_content' id='content' style='resize: vertical;' class='form-control' rows='6' required></textarea>" +
+            "</div>" +
+            "<div class='mb-2'><label for='upload_file'>업로드 파일</label>" +
+            "<input type='file' id='upload_file'>" +
+            "</div>" +
+            "<div><button type='button' class='btn btn-primary' id='upload_btn'>올리기</button></div>"+
+            "</form>" +
+            "</div>" +
+            "<script src='/js/datasave.js' />";
+        base.append(tag);
+    }
+    function homework() {
+        document.getElementById('schedule').setAttribute('class', 'nav-item');
+        document.getElementById('regi_group').setAttribute('class', 'nav-item');
+        document.getElementById('data_upload').setAttribute('class', 'nav-item');
+        document.getElementById('homework').setAttribute('class', 'nav-item active');
+        document.getElementById('home').setAttribute('class', 'nav-item');
+        document.getElementById('give_admin').setAttribute('class','nav-item');
+        base.empty();
+        const tag =
+            "<div class='container'>" +
+            "<h2>과제 등록</h2>" +
+            "<form id='homeworkForm'>" +
+            "<div class='mb-2'><label for='homework_title'>과제명</label><input type='text' class='form-control' name='homework_title' id='homework_title' placeholder='제목을 입력해 주세요'></div>" +
+            "<div class='mb-2'><label for='content'>과제 마감일</label>" +
+            "<input type='datetime-local' class='form-control' name='homework_end' id='homework_end'>" +
+            "</div>" +
+            "<div class='mb-2'><label for='homework_content'>내용</label>" +
+            "<textarea id='homework_content' style='resize:vertical;' class='form-control' rows='6' required name='homework_content'></textarea>" +
+            "</div>" +
+            "<div class='mb-2'><label for='receive_mail'>받을 이메일 주소</label>" +
+            "<input type='email' class='form-control' name='receive_mail' id='receive_mail'>" +
+            "</div>" +
+            "<div><button type='button' class='btn btn-primary' id='homework_save_btn'>과제 등록</button></div>"+
+            "</form>" +
+            "</div>" +
+            "<script src='/js/homework.js' />";
+        base.append(tag);
+    }
+
+    function give_admin() {
+        document.getElementById('schedule').setAttribute('class', 'nav-item');
+        document.getElementById('regi_group').setAttribute('class', 'nav-item');
+        document.getElementById('data_upload').setAttribute('class', 'nav-item');
+        document.getElementById('homework').setAttribute('class', 'nav-item');
+        document.getElementById('home').setAttribute('class', 'nav-item');
+        document.getElementById('give_admin').setAttribute('class','nav-item active');
+        base.empty();
+        const tag =
+            "<div class='container'>" +
+            "<h2>관리자로 등록</h2>" +
+            "<form id='adminForm'>" +
+            "<div class='mb-2'>" +
+            "<label for='give_admin_id'>과제명</label>" +
+            "<input type='text' class='form-control' name='id' id='give_admin_id' placeholder='아이디를 입력해 주세요'>" +
+            "</div>" +
+            "<div><button type='button' class='btn btn-primary' id='give_admin_btn'>관리자로 등록</button></div>"+
+            "</form>" +
+            "<hr>" +
+            "<h5 style='color: red;'>※ 동아리의 부장들만 관리자로 등록해주세요.</h5>" +
+            "</div>" +
+            "<script src='/js/give_admin.js' />";
+        base.append(tag);
+    }
+</script>
+</body>
+</html>
