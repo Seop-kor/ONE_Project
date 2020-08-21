@@ -1,0 +1,23 @@
+package dong.mirae.one.Entity.PK;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import java.io.Serializable;
+
+@NoArgsConstructor
+@Getter
+@Embeddable
+public class SchedulePK implements Serializable {
+    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int no;
+
+    public SchedulePK(int no){
+        this.no = no;
+    }
+}
